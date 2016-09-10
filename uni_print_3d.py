@@ -27,6 +27,7 @@ base.init_gantry(axisIndex=2)
 hardware.hardware_read()
 base.gantry_read(gantryAxis=2, thread='servo-thread')
 hal.addf('motion-command-handler', 'servo-thread')
+hal.addf('motion-controller', 'servo-thread')
 
 numFans = c.find('FDM', 'NUM_FANS')
 numExtruders = c.find('FDM', 'NUM_EXTRUDERS')
@@ -36,14 +37,14 @@ withAbp = c.find('FDM', 'ABP', False)
 # Axis-of-motion Specific Configs (not the GUI)
 ve.velocity_extrusion(extruders=numExtruders, thread='servo-thread')
 # X [0] Axis
-base.setup_stepper(section='AXIS_0', axisIndex=0, stepgenIndex=0)
+base.setup_stepper(section='AXIS_0', axisIndex=0, stepgenIndex=0, thread='servo-thread')
 # Y [1] Axis
-base.setup_stepper(section='AXIS_1', axisIndex=1, stepgenIndex=1)
+base.setup_stepper(section='AXIS_1', axisIndex=1, stepgenIndex=1, thread='servo-thread')
 # Z [2] Axis
 base.setup_stepper(section='AXIS_2', axisIndex=2, stepgenIndex=2,
-              thread='servo-thread', gantry=True, gantryJoint=0)
+                   thread='servo-thread', gantry=True, gantryJoint=0)
 base.setup_stepper(section='AXIS_2', axisIndex=2, stepgenIndex=3,
-            gantry=True, gantryJoint=1)
+                   thread='servo-thread', gantry=True, gantryJoint=1)
 # Extruder, velocity controlled
 base.setup_stepper(section='EXTRUDER_0', stepgenIndex=4, velocitySignal='ve-extrude-vel')
 
@@ -97,7 +98,6 @@ base.setup_probe(thread='servo-thread')
 hardware.setup_hardware(thread='servo-thread')
 
 # write out functions
-hal.addf('motion-controller', 'servo-thread')
 base.gantry_write(gantryAxis=2, thread='servo-thread')
 hardware.hardware_write()
 
